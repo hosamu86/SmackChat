@@ -1,5 +1,6 @@
 package com.undergroundauto.myapplication
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -14,6 +15,7 @@ class LoginActivity : AppCompatActivity() {
 
     }
     fun registerBClicked(view: View){
-
+   val registerIntent = Intent(this,RegisterActivity::class.java)
+        startActivity(registerIntent)
     }
 }
