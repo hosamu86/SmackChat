@@ -65,7 +65,7 @@
         app:layout_constraintTop_toBottomOf="@+id/passRegistration" />
 
     <ImageView
-        android:id="@+id/imageViewRegistration"
+        android:id="@+id/createImageView"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginTop="8dp"
@@ -89,7 +89,7 @@
         android:textColor="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewRegistration" />
+        app:layout_constraintTop_toBottomOf="@+id/createImageView" />
 
     <Button
         android:id="@+id/registerRegistration"
