@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "378050684948",
+    "firebase_url": "https://huzza-7471b.firebaseio.com",
+    "project_id": "huzza-7471b",
+    "storage_bucket": "huzza-7471b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:378050684948:android:79374797c94c945d",
+        "android_client_info": {
+          "package_name": "com.undergroundauto.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "378050684948-adpk116u85j5nn10mj4b8lptrh0hr0kj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAi5VssieBanXuFKLxyy5f2GZsmRs9uuZ8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
