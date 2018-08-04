@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.undergroundauto.myapplication.R
+import com.undergroundauto.myapplication.Services.AuthService
 import kotlinx.android.synthetic.main.activity_register.*
 import java.util.*
 
@@ -44,6 +45,12 @@ class RegisterActivity : AppCompatActivity() {
         avatarColor = "[$savedR,$savedG,$savedB,1]"
     }
     fun registerRegistrationClicked(view: View){
+        //emailRegistration.toString(),passRegistration.toString()
+        AuthService.registerUser(this,"hosam@c.c","12321" ){
+            complete->if (complete){
+
+        }
+        }
 
     }
 }
