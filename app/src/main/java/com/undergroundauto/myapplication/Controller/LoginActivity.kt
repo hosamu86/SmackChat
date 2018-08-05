@@ -19,6 +19,7 @@ class LoginActivity : AppCompatActivity() {
     fun registerBClicked(view: View){
    val registerIntent = Intent(this, RegisterActivity::class.java)
         startActivity(registerIntent)
+        finish()
     }
 
 }

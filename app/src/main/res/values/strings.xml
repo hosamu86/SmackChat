@@ -14,4 +14,6 @@
     <string name="genrate_background_color">Genrate Background Color</string>
     <string name="register">Register</string>
     <string name="profile_register_image">Profile Register Image</string>
+    <string name="login">Login</string>
+    <string name="nav_profile_photo">Nav profile photo</string>
 </resources>
