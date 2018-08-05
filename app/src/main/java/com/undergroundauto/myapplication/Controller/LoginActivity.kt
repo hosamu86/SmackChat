@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.undergroundauto.myapplication.R
+import com.undergroundauto.myapplication.Services.AuthService
+import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
 
@@ -14,6 +16,19 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
     }
     fun loginLoginBClicked(view: View){
+        val email = loginEmail.text.toString()
+        val password = loginPass.text.toString()
+
+        AuthService.loginUser(this,email,password){loginSuccess->
+            if (loginSuccess){
+                AuthService.findUserByEmail(this){findSuccess->
+                    if (findSuccess){
+                        finish()
+                    }
+
+                }
+            }
+        }
 
     }
     fun registerBClicked(view: View){
