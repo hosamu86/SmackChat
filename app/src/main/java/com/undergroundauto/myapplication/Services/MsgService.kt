@@ -11,7 +11,7 @@ import org.json.JSONException
 
 object MsgService {
     val channels = ArrayList<Channel>()
-    fun getChannel(context:Context,complete: (Boolean)-> Unit){
+    fun getChannel(complete: (Boolean)-> Unit){
         val channelsRequest = object : JsonArrayRequest(Method.GET, URL_GET_CHANNELS,null,Response.Listener {response->
             try {
                 for (x in 0 until response.length() ){

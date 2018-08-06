@@ -1,5 +1,6 @@
 package com.undergroundauto.myapplication.Controller
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -29,11 +30,13 @@ import io.socket.emitter.Emitter
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 
 class MainActivity : AppCompatActivity(){
     val socket = IO.socket(SOCKET_URL)
     lateinit var channelAdapter:ArrayAdapter<Channel>
+    var selectedChannel : Channel? = null
 
     private fun setUpAdapter(){
         channelAdapter = ArrayAdapter(this,android.R.layout.simple_list_item_1,MsgService.channels)
@@ -49,6 +52,12 @@ class MainActivity : AppCompatActivity(){
 
         socket.connect()
         socket.on("channelCreated",onNewChannel)
+
+        channels_id.setOnItemClickListener { _, _, position, _ ->
+            selectedChannel = MsgService.channels[position]
+            drawer_layout.closeDrawer(GravityCompat.START)
+            updateWithChannel()
+        }
 
 
 
@@ -94,15 +103,25 @@ class MainActivity : AppCompatActivity(){
                 loginNav.text= "Logout"
                 userImageNav.setBackgroundColor(UserDataService.returnAvatarColor(UserDataService.avatarColor))
 
-                MsgService.getChannel(context){complete ->
+                MsgService.getChannel(){complete ->
                     if(complete){
-                    channelAdapter.notifyDataSetChanged()}
+                        if (MsgService.channels.count()>0){
+                            selectedChannel = MsgService.channels[0]
+                            channelAdapter.notifyDataSetChanged()
+                            updateWithChannel()
+                        }
+                    }
 
                 }
 
 
             }
         }
+    }
+    @SuppressLint("SetTextI18n")
+    fun updateWithChannel(){
+        mainChannel.text = "#${selectedChannel?.name}"
+        //download msgs
     }
 
     override fun onBackPressed() {
