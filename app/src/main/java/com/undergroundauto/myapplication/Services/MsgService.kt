@@ -6,11 +6,13 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonArrayRequest
 import com.undergroundauto.myapplication.Controller.App
 import com.undergroundauto.myapplication.Models.Channel
+import com.undergroundauto.myapplication.Models.Msg
 import com.undergroundauto.myapplication.Utilities.URL_GET_CHANNELS
 import org.json.JSONException
 
 object MsgService {
     val channels = ArrayList<Channel>()
+    val msgs = ArrayList<Msg>()
     fun getChannel(complete: (Boolean)-> Unit){
         val channelsRequest = object : JsonArrayRequest(Method.GET, URL_GET_CHANNELS,null,Response.Listener {response->
             try {

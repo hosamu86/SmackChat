@@ -19,6 +19,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import com.undergroundauto.myapplication.Models.Channel
+import com.undergroundauto.myapplication.Models.Msg
 import com.undergroundauto.myapplication.R
 import com.undergroundauto.myapplication.Services.AuthService
 import com.undergroundauto.myapplication.Services.MsgService
@@ -36,6 +37,7 @@ import kotlinx.android.synthetic.main.nav_header_main.*
 class MainActivity : AppCompatActivity(){
     val socket = IO.socket(SOCKET_URL)
     lateinit var channelAdapter:ArrayAdapter<Channel>
+
     var selectedChannel : Channel? = null
 
     private fun setUpAdapter(){
@@ -52,6 +54,7 @@ class MainActivity : AppCompatActivity(){
 
         socket.connect()
         socket.on("channelCreated",onNewChannel)
+        socket.on("messageCreated",onNewMsg)
 
         channels_id.setOnItemClickListener { _, _, position, _ ->
             selectedChannel = MsgService.channels[position]
@@ -186,9 +189,32 @@ class MainActivity : AppCompatActivity(){
 
         }
     }
+    private val onNewMsg = Emitter.Listener { args ->
+        runOnUiThread {
+            val msgBody = args[0] as String
+            val channelId = args[2] as String
+            val userName = args[3] as String
+            val userAvatar = args[4] as String
+            val userAvatarColor = args[5] as String
+            val id = args[6] as String
+            val timeStamp = args[7] as String
+            val newMsg= Msg(msgBody,channelId,userName,userAvatar,userAvatarColor,id,timeStamp)
+            MsgService.msgs.add(newMsg)
+            println(newMsg.msg)
+
+        }
+    }
 
     fun sendMessageBClicked(view: View){
-        hideKeyboard()
+        if (App.prefs.isLoggIn && sendTextField.text.isNotEmpty()&& selectedChannel!= null ){
+            val userId = UserDataService.id
+            val channelId = selectedChannel!!.id
+            socket.emit("newMessage",sendTextField.text.toString(),userId,channelId,
+                    UserDataService.name,UserDataService.avatarName,UserDataService.avatarColor)
+            sendTextField.text.clear()
+            hideKeyboard()
+        }
+
 
     }
     fun hideKeyboard() {
