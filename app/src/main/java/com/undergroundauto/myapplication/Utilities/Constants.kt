@@ -7,3 +7,4 @@ const val URL_CREATE_USER ="${BASE_URL}user/add"
 const val URL_GET_USER="${BASE_URL}user/byEmail/"
 //broadcast
 const val BROADCAST_USER_DATA_CHANGE="BROADCAST_USER_DATA_CHANGE"
+const val SOCKET_URL = "https://huzzza.herokuapp.com/"

@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Message
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
@@ -15,22 +16,32 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import com.undergroundauto.myapplication.Models.Channel
 import com.undergroundauto.myapplication.R
 import com.undergroundauto.myapplication.Services.AuthService
+import com.undergroundauto.myapplication.Services.MsgService
 import com.undergroundauto.myapplication.Services.UserDataService
 import com.undergroundauto.myapplication.Utilities.BROADCAST_USER_DATA_CHANGE
+import com.undergroundauto.myapplication.Utilities.SOCKET_URL
+import io.socket.client.IO
+import io.socket.emitter.Emitter
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 
 class MainActivity : AppCompatActivity(){
+    val socket = IO.socket(SOCKET_URL)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-        hideKeyboard()
+
+        socket.connect()
+        socket.on("channelCreated",onNewChannel)
+
 
 
 
@@ -39,9 +50,23 @@ class MainActivity : AppCompatActivity(){
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
 
+
+
+
+    }
+
+    override fun onResume() {
+
+
         LocalBroadcastManager.getInstance(this).registerReceiver(userDataChangeReceiver, IntentFilter(BROADCAST_USER_DATA_CHANGE))
+        super.onResume()
+    }
 
 
+    override fun onDestroy() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(userDataChangeReceiver)
+        socket.disconnect()
+        super.onDestroy()
     }
 
     private val userDataChangeReceiver  = object : BroadcastReceiver(){
@@ -93,23 +118,38 @@ class MainActivity : AppCompatActivity(){
                 //preform logic when clicked
                 val textFeildDiag = diagView.findViewById<EditText>(R.id.addChannelName)
                 val textFeildDiagDesc = diagView.findViewById<EditText>(R.id.addChannelDes)
-                val chaanelName = textFeildDiag.text.toString()
+                val channelName = textFeildDiag.text.toString()
                 val channelDesc = textFeildDiagDesc.text.toString()
                 //create channel name
-                hideKeyboard()
+                socket.emit("newChannel",channelName,channelDesc)
+
 
             }
                     .setNegativeButton("Cancel"){dialog, which ->
                         // cancel
-                        hideKeyboard()
+
 
                     }.show()
 
     }
 
  }
+    private val onNewChannel = Emitter.Listener { args ->
+        runOnUiThread {
+            val channelName = args[0] as String
+            val channelDesc = args[1] as String
+            val channelId = args[2] as String
+
+            val newChannel = Channel(channelName,channelDesc,channelId)
+            MsgService.channels.add(newChannel)
+            println(newChannel.name)
+            println(newChannel.desc)
+            println(newChannel.id)
+        }
+    }
 
     fun sendMessageBClicked(view: View){
+        hideKeyboard()
 
     }
     fun hideKeyboard() {
