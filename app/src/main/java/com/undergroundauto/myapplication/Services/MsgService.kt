@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonArrayRequest
-import com.android.volley.toolbox.Volley
+import com.undergroundauto.myapplication.Controller.App
 import com.undergroundauto.myapplication.Models.Channel
 import com.undergroundauto.myapplication.Utilities.URL_GET_CHANNELS
 import org.json.JSONException
@@ -41,13 +41,13 @@ object MsgService {
 
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String,String>()
-                headers.put("Authorization","Bearer ${AuthService.authToken}")
+                headers.put("Authorization","Bearer ${App.prefs.authToken}")
                 return headers
             }
 
 
         }
-        Volley.newRequestQueue(context).add(channelsRequest)
+        App.prefs.requestQueue.add(channelsRequest)
 
     }
 

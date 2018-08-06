@@ -1,7 +1,8 @@
 package com.undergroundauto.myapplication.Services
 
 import android.graphics.Color
-import android.provider.ContactsContract
+
+import com.undergroundauto.myapplication.Controller.App
 import java.util.*
 
 object UserDataService {
@@ -17,9 +18,9 @@ object UserDataService {
         var avatarName =""
         var email = ""
         var name = ""
-        AuthService.authToken=""
-        AuthService.userEmail=""
-        AuthService.isLoggedin=false
+        App.prefs.authToken=""
+        App.prefs.userEmail=""
+        App.prefs.isLoggIn=false
 
     }
 

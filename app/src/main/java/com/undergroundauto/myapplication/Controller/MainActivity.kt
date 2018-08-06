@@ -59,6 +59,12 @@ class MainActivity : AppCompatActivity(){
         toggle.syncState()
         setUpAdapter()
 
+        if (App.prefs.isLoggIn){
+            AuthService.findUserByEmail(this){
+
+            }
+        }
+
 
 
 
@@ -80,7 +86,7 @@ class MainActivity : AppCompatActivity(){
 
     private val userDataChangeReceiver  = object : BroadcastReceiver(){
         override fun onReceive(context: Context, intent: Intent?) {
-            if (AuthService.isLoggedin){
+            if (App.prefs.isLoggIn){
                 usernameNav.text= UserDataService.name
                 emailNav.text= UserDataService.email
                 val resourceId = resources.getIdentifier(UserDataService.avatarName,"drawable",packageName)
@@ -107,7 +113,7 @@ class MainActivity : AppCompatActivity(){
         }
     }
     fun loginNavClicked(view: View){
-        if(AuthService.isLoggedin){
+        if(App.prefs.isLoggIn){
             //logout
             UserDataService.logout()
             usernameNav.text= ""
@@ -125,7 +131,7 @@ class MainActivity : AppCompatActivity(){
  }
     fun addChannelNavClicked(view: View){
 
-        if (AuthService.isLoggedin){
+        if (App.prefs.isLoggIn){
             val builder = AlertDialog.Builder(this)
             val diagView = layoutInflater.inflate(R.layout.add_channel_diag,null )
 
