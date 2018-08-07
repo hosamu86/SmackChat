@@ -21,6 +21,8 @@ object UserDataService {
         App.prefs.authToken=""
         App.prefs.userEmail=""
         App.prefs.isLoggIn=false
+        MsgService.clearMsgs()
+        MsgService.clearChannel()
 
     }
 

@@ -125,6 +125,16 @@ class MainActivity : AppCompatActivity(){
     fun updateWithChannel(){
         mainChannel.text = "#${selectedChannel?.name}"
         //download msgs
+        if (selectedChannel != null){
+            MsgService.getMsgs(selectedChannel!!.id){complete ->
+                if (complete){
+                    for (msg in MsgService.msgs){
+                        println(msg.msg)
+                    }
+                }
+
+            }
+        }
     }
 
     override fun onBackPressed() {
@@ -178,30 +188,34 @@ class MainActivity : AppCompatActivity(){
 
  }
     private val onNewChannel = Emitter.Listener { args ->
+        if (App.prefs.isLoggIn){
         runOnUiThread {
             val channelName = args[0] as String
             val channelDesc = args[1] as String
             val channelId = args[2] as String
 
-            val newChannel = Channel(channelName,channelDesc,channelId)
+            val newChannel = Channel(channelName, channelDesc, channelId)
             MsgService.channels.add(newChannel)
             channelAdapter.notifyDataSetChanged()
-
+        }
         }
     }
     private val onNewMsg = Emitter.Listener { args ->
+        if (App.prefs.isLoggIn){
         runOnUiThread {
-            val msgBody = args[0] as String
             val channelId = args[2] as String
-            val userName = args[3] as String
-            val userAvatar = args[4] as String
-            val userAvatarColor = args[5] as String
-            val id = args[6] as String
-            val timeStamp = args[7] as String
-            val newMsg= Msg(msgBody,channelId,userName,userAvatar,userAvatarColor,id,timeStamp)
-            MsgService.msgs.add(newMsg)
-            println(newMsg.msg)
+            if (channelId == selectedChannel?.id){
+                val msgBody = args[0] as String
+                val userName = args[3] as String
+                val userAvatar = args[4] as String
+                val userAvatarColor = args[5] as String
+                val id = args[6] as String
+                val timeStamp = args[7] as String
+                val newMsg = Msg(msgBody, channelId, userName, userAvatar, userAvatarColor, id, timeStamp)
+                MsgService.msgs.add(newMsg)
 
+            }
+        }
         }
     }
 
