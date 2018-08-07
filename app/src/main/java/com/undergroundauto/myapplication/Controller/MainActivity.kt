@@ -14,10 +14,13 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.EditText
+import com.undergroundauto.myapplication.Adapters.MsgAdapter
 import com.undergroundauto.myapplication.Models.Channel
 import com.undergroundauto.myapplication.Models.Msg
 import com.undergroundauto.myapplication.R
@@ -37,12 +40,18 @@ import kotlinx.android.synthetic.main.nav_header_main.*
 class MainActivity : AppCompatActivity(){
     val socket = IO.socket(SOCKET_URL)
     lateinit var channelAdapter:ArrayAdapter<Channel>
+    lateinit var msgAdapter: MsgAdapter
 
     var selectedChannel : Channel? = null
 
     private fun setUpAdapter(){
         channelAdapter = ArrayAdapter(this,android.R.layout.simple_list_item_1,MsgService.channels)
         channels_id.adapter = channelAdapter
+
+        msgAdapter = MsgAdapter(this,MsgService.msgs)
+        msgListView.adapter = msgAdapter
+        val layoutManger = LinearLayoutManager(this)
+        msgListView.layoutManager = layoutManger
 
     }
 
@@ -128,9 +137,11 @@ class MainActivity : AppCompatActivity(){
         if (selectedChannel != null){
             MsgService.getMsgs(selectedChannel!!.id){complete ->
                 if (complete){
-                    for (msg in MsgService.msgs){
-                        println(msg.msg)
+                    msgAdapter.notifyDataSetChanged()
+                    if (msgAdapter.itemCount > 0 ){
+                        msgListView.smoothScrollToPosition(msgAdapter.itemCount -1)
                     }
+
                 }
 
             }
@@ -147,6 +158,8 @@ class MainActivity : AppCompatActivity(){
     fun loginNavClicked(view: View){
         if(App.prefs.isLoggIn){
             //logout
+            channelAdapter.notifyDataSetChanged()
+            msgAdapter.notifyDataSetChanged()
             UserDataService.logout()
             usernameNav.text= ""
             emailNav.text=""
@@ -213,6 +226,8 @@ class MainActivity : AppCompatActivity(){
                 val timeStamp = args[7] as String
                 val newMsg = Msg(msgBody, channelId, userName, userAvatar, userAvatarColor, id, timeStamp)
                 MsgService.msgs.add(newMsg)
+                msgAdapter.notifyDataSetChanged()
+                msgListView.smoothScrollToPosition(msgAdapter.itemCount - 1)
 
             }
         }
